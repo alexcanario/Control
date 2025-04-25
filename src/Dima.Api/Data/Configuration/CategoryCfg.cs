@@ -9,6 +9,10 @@ public class CategoryCfg : IEntityTypeConfiguration<Category>
 {
 	public void Configure(EntityTypeBuilder<Category> builder)
 	{
-		throw new NotImplementedException();
+		builder.HasKey(c => c.Id);
+
+		builder.Property(c => c.Title).IsRequired().HasColumnType("nvarchar").HasMaxLength(50);
+		builder.Property(c => c.Description).IsRequired().HasColumnType("nvarchar").HasMaxLength(80);
+		builder.Property(c => c.UserId);
 	}
 }
