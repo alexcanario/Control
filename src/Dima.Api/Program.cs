@@ -1,16 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
-
-app.MapGet("/v1/transactions/{id}",
-		(long id, Handler handler) => handler.Handle(request))
-	.WithName("Transactions: Get by id")
-	.WithSummary("Get the transaction by id")
-	.Produces<Response>();                         
-
-
-
+app.MapGet("/", () => new { message = "Hello World!" });
 
 app.MapPost("/v1/transactions",
 		(Request request, Handler handler) => handler.Handle(request))
@@ -25,7 +16,7 @@ app.Run();
 //response
 //handler
 
-public record Request(string Title, DateTime PaidOrReceivedAt, ETransactionType Type, decimal Amount, long CategoryId, string UserId) 
+public record Request(string Title, DateTime PaidOrReceivedAt, ETransactionType Type, decimal Amount, long CategoryId, string UserId)
 	: TransactionDto(Title, PaidOrReceivedAt, Type, Amount, CategoryId, UserId);
 
 public record Response(long Id, string Title);
