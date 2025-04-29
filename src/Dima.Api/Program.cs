@@ -1,5 +1,5 @@
 using Dima.Api.Data;
-
+using Dima.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,13 +32,13 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 
-app.MapGet("/", () => new { message = "Hello World!" });
+//app.MapGet("/", () => new { message = "Hello World!" });
 
-//app.MapPost("/v1/transactions",
-//		(Request request, Handler handler) => handler.Handle(request))
-//	.WithName("Transactions: Create")
-//	.WithSummary("Create the new transaction")
-//	.Produces<Response>();
+app.MapPost("/v1/transactions",
+		(RequestCategory request, Handler handler) => handler.Handle(request))
+	.WithName("Transactions: Create")
+	.WithSummary("Create the new transaction")
+	.Produces<ResponseCategory>();
 
 app.Run();
 
@@ -66,12 +66,32 @@ public class Request(
 
 public record Response(long Id, string Title);
 
-public class Handler
+public class Handler(AppDbContext ctx)
 {
-	public Response Handle(Request request)
+	public ResponseCategory Handle(RequestCategory request)
 	{
 		// Simulate some processing
 		// Persist the transaction to a database or perform some business logic
-		return new Response(Id: 2, Title: request.Title);
+		var category = new Category
+		{
+			Title = request.Title,
+			Description = request.Description
+		};
+
+		ctx.Categories.Add(category);
+		ctx.SaveChanges();
+
+		return new ResponseCategory { Category = category };
 	}
+}
+
+public class RequestCategory
+{
+	public string Title { get; set; } = string.Empty;
+	public string Description { get; set; } = string.Empty;
+}
+
+public class ResponseCategory
+{
+	public Category Category { get; set; } = null!;
 }
