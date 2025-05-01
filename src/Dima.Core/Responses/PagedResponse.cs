@@ -14,11 +14,9 @@ public class PagedResponse<TData> : Response<TData>
 	}
 
 	public PagedResponse(TData? data, int statusCode = Configuration.DefaultStatusCode, string? message = null)
-		: base(data, statusCode, message)
-	{
-	}
+		: base(data, statusCode, message) { }
 
-	public int CurrentPage { get; set; }
+	public int CurrentPage { get; set; } = 1;
 	public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
 	public int PageSize { get; set; }
 	public int TotalCount { get; set; }
