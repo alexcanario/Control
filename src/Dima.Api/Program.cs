@@ -8,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-	//c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dima API", Version = "v1" });
-	//c.CustomOperationIds(e => e.ActionDescriptor.RouteValues["action"]);
 	c.CustomSchemaIds(type => type.FullName);
 });
 
@@ -23,14 +21,17 @@ builder.Services.AddScoped<ICategoryHandler, CategoryHandler>();
 var app = builder.Build();
 
 app.UseSwagger();
-//app.UseSwaggerUI(c =>
-//	{
-//		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dima API V1");
-//		c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
-//	});
-
 app.UseSwaggerUI();
 
-app.MapPost("/", (Request, CategoryHandler) => { });
+app.MapPost("/v1/categories", async (CreateCategoryRequest command, ICategoryHandler handler) =>
+{
+	var response = await handler.CreateAsync(command);
+})
+	.WithName("CreateCategory")
+	.Produces<Response<Category>>(StatusCodes.Status201Created)
+	.Produces<Response<Category>>(StatusCodes.Status400BadRequest)
+	.Produces<Response<Category>>(StatusCodes.Status500InternalServerError)
+	.WithSummary("Create a new category")
+	.WithTags("Categories");
 
 app.Run();
