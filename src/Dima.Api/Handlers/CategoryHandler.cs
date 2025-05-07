@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dima.Api.Handlers;
 
-public class CategoryHandler(AppDbContext Ctx) : ICategoryHandler
+public class CategoryHandler(AppDbContext ctx) : ICategoryHandler
 {
 	public async Task<Response<Category>> CreateAsync(CreateCategoryRequest request)
 	{
@@ -17,54 +17,79 @@ public class CategoryHandler(AppDbContext Ctx) : ICategoryHandler
 
 		try
 		{
-			Ctx.Categories.Add(category);
-			await Ctx.SaveChangesAsync();
+			ctx.Categories.Add(category);
+			await ctx.SaveChangesAsync();
 
 			return new Response<Category>(category, code: StatusCodes.Status201Created);
 		}
 		catch (Exception ex)
 		{
-			return new Response<Category>(category, message: ex.Message);
-			throw;
+			return new Response<Category>(category, code: StatusCodes.Status500InternalServerError, message: ex.Message);
 		}
 	}
 
-	public async Task<Response<Category>> UpdateAsync(UpdateCategoryRequest request)
+	public async Task<Response<Category?>> UpdateAsync(UpdateCategoryRequest request)
 	{
-		var category = await Ctx.Categories.Where(c => c.Id == request.Id && c.UserId == request.UserId)
+		var category = await ctx.Categories.Where(c => c.Id == request.Id && c.UserId == request.UserId)
 			.FirstOrDefaultAsync();
 
 		if (category == null)
-			return new Response<Category>(null, code: StatusCodes.Status404NotFound, message: "Categoria não encontrada!");
+			return new Response<Category?>(null, code: StatusCodes.Status204NoContent, message: "Categoria não encontrada!");
 
 		try
 		{
 			category.Title = request.Title;
 			category.Description = request.Description;
 
-			Ctx.Categories.Update(category);
-			await Ctx.SaveChangesAsync();
-			return new Response<Category>(category);
+			ctx.Categories.Update(category);
+			await ctx.SaveChangesAsync();
+			return new Response<Category?>(category, code: StatusCodes.Status200OK, "Categoria atualizada com sucesso.");
 		}
 		catch (Exception e)
 		{
 			// Log the exception (e.g., using Serilog, NLog, etc.)
-			return new Response<Category>(null, code: StatusCodes.Status500InternalServerError,  "Não foi possível alterar a categoria.");
+			return new Response<Category?>(null, code: StatusCodes.Status500InternalServerError,  e.Message);
 		}
 	}
 
-	public Task<Response<Category>> DeleteAsync(DeleteCategoryRequest request)
+	public async Task<Response<Category?>> DeleteAsync(DeleteCategoryRequest request)
 	{
+		var category = await ctx.Categories.Where(c => c.Id == request.Id && c.UserId == request.UserId).FirstOrDefaultAsync();
 
+		if (category is null)
+			return new Response<Category?>(null, code: StatusCodes.Status204NoContent, message: "Categoria não encontrada!");
+		try
+		{
+			ctx.Categories.Remove(category);
+			await ctx.SaveChangesAsync();
+			return new Response<Category?>(category, code: StatusCodes.Status200OK, "Categoria removida com sucesso.");
+		}
+		catch (Exception e)
+		{
+			// Log the exception (e.g., using Serilog, NLog, etc.)
+			return new Response<Category?>(null, code: StatusCodes.Status500InternalServerError, message: e.Message);
+		}
 	}
 
-	public Task<Response<IList<Category>>> GetAllAsync(GetAllCategoriesRequest request)
+	public async Task<Response<List<Category>?>> GetAllAsync(GetAllCategoriesRequest request)
 	{
-		throw new NotImplementedException();
+
+		var categories = await ctx.Categories.AsNoTracking().Where(c => c.UserId == request.UserId).ToListAsync();
+
+		return categories.Count == 0
+			? new Response<List<Category>?>(categories, code: StatusCodes.Status204NoContent,
+				"Não há categorias para exibir")
+			: new Response<List<Category>?>(categories, code: StatusCodes.Status200OK);
 	}
 
-	public Task<Response<Category>> GetByIdAsync(GetCategoryByIdRequest request)
+	public async Task<Response<Category?>> GetByIdAsync(GetCategoryByIdRequest request)
 	{
-		throw new NotImplementedException();
+		var category = await ctx.Categories.AsNoTracking()
+			.Where(c => c.Id == request.Id && c.UserId == request.UserId)
+			.FirstOrDefaultAsync();
+
+		return category is null
+			? new Response<Category?>(null, code: StatusCodes.Status204NoContent, message: "Categoria não encontrada!")
+			: new Response<Category?>(category);
 	}
 }
