@@ -71,15 +71,33 @@ public class CategoryHandler(AppDbContext ctx) : ICategoryHandler
 		}
 	}
 
-	public async Task<Response<List<Category>?>> GetAllAsync(GetAllCategoriesRequest request)
+	public async Task<PagedResponse<List<Category?>>> GetAllAsync(GetAllCategoriesRequest request)
 	{
+		var categoriesQuery =
+			ctx.Categories
+				.AsNoTracking()
+				.Where(c => c.UserId == request.UserId);
 
-		var categories = await ctx.Categories.AsNoTracking().Where(c => c.UserId == request.UserId).ToListAsync();
+		try
+		{
+			var categories = await
+				categoriesQuery
+					.Skip(request.PageSize * (request.PageNumber - 1))
+					.Take(request.PageSize)
+					.ToListAsync();
 
-		return categories.Count == 0
-			? new Response<List<Category>?>(categories, code: StatusCodes.Status204NoContent,
-				"Não há categorias para exibir")
-			: new Response<List<Category>?>(categories, code: StatusCodes.Status200OK);
+			var totalCount = await
+				categoriesQuery
+					.CountAsync();
+
+			return new PagedResponse<List<Category?>>(categories!, totalCount, request.PageNumber, request.PageSize);
+		}
+		catch (Exception e)
+		{
+			//todo: log exception for get categories
+			return new PagedResponse<List<Category?>>(null, StatusCodes.Status500InternalServerError, message: e.Message);
+		}
+
 	}
 
 	public async Task<Response<Category?>> GetByIdAsync(GetCategoryByIdRequest request)
@@ -90,6 +108,6 @@ public class CategoryHandler(AppDbContext ctx) : ICategoryHandler
 
 		return category is null
 			? new Response<Category?>(null, code: StatusCodes.Status204NoContent, message: "Categoria não encontrada!")
-			: new Response<Category?>(category);
+			: new Response<Category?>(category, $"Categoria {request.Id} encontrada.");
 	}
 }

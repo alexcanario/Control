@@ -9,6 +9,12 @@ public class Response<TData>
 	[JsonConstructor]
 	public Response() => _code = Configuration.DefaultStatusCode;
 
+	public Response(TData? data, string? message) : this()
+	{
+		Data = data;
+		Message = message;
+	}
+
 	public Response(TData? data, int code = Configuration.DefaultStatusCode, string? message = null)
 	{
 		Data = data;

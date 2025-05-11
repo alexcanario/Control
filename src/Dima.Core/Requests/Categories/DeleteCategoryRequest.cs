@@ -1,6 +1,6 @@
 ﻿namespace Dima.Core.Requests.Categories;
 
-public class DeleteCategoryRequest : Request
+public class DeleteCategoryRequest(long id, string userId) : Request(userId)
 {
-	public long Id { get; set; }
+	public long Id { get; set; } = id;
 }

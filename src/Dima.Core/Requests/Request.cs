@@ -2,5 +2,10 @@
 
 public abstract class Request
 {
-	public string  UserId { get; set; } = string.Empty;
+	protected Request() { }
+
+	protected Request(string userId) => UserId = userId;
+
+	//to-do: Add validation for userId
+	public string UserId { get; set; } = string.Empty;
 }
