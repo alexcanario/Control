@@ -71,7 +71,7 @@ public class CategoryHandler(AppDbContext ctx) : ICategoryHandler
 		}
 	}
 
-	public async Task<PagedResponse<List<Category?>>> GetAllAsync(GetAllCategoriesRequest request)
+	public async Task<PagedResponse<List<Category?>>> GetAllAsync(GetAllCategoryRequest request)
 	{
 		var categoriesQuery =
 			ctx.Categories
