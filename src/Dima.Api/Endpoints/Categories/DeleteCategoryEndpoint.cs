@@ -23,6 +23,8 @@ public class DeleteCategoryEndpoint : IEndpoint
 
         var response = await handle.DeleteAsync(new DeleteCategoryRequest(id, "alexcanario@"));
 
-        return response.IsSuccess ? Results.Ok(response.Data) : Results.NotFound(new Response<Category>(null, StatusCodes.Status404NotFound, "Category not found."));
+        return response.IsSuccess 
+            ? Results.Ok(response) 
+            : Results.NotFound(response);
     }
 }

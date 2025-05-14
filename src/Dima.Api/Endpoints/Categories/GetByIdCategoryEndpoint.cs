@@ -22,6 +22,6 @@ public class GetByIdCategoryEndpoint : IEndpoint
         
         return response.IsSuccess 
             ? Results.Ok(response) 
-            : Results.NotFound();
+            : Results.NotFound(response);
     }
 }

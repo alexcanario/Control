@@ -23,7 +23,7 @@ public class UpdateCategoryEndpoint : IEndpoint
         var response = await handler.UpdateAsync(command);
 
         return response.IsSuccess
-            ? Results.Ok(response.Data)
-            : Results.BadRequest(response.Message);
+            ? Results.Ok(response)
+            : Results.BadRequest(response);
     }
 }

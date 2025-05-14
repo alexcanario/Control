@@ -24,7 +24,7 @@ public class CreateCategoryEndpoint : IEndpoint
         var response = await handler.CreateAsync(command);
 
 		return response.IsSuccess
-			? Results.Created($"/{response.Data?.Id}", response.Data)
-			: Results.BadRequest(response.Message);
+			? Results.Created($"/{response.Data?.Id}", response)
+			: Results.BadRequest(response);
 	}
 }
