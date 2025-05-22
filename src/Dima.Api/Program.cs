@@ -16,7 +16,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ICategoryHandler, CategoryHandler>();
 
-
 var app = builder.Build();
 
 app.MapEndpoints();
