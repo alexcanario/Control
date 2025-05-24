@@ -10,9 +10,7 @@ public class CreateCategoryEndpoint : IEndpoint
             .WithName("CreateCategory")
             .WithSummary("Creates a new category")
             .WithDescription("Create a new category in the system")
-            .WithTags("Categories")
             .WithOrder(1);
-            
 
 	private static async Task<IResult> HandleAsync(CreateCategoryRequest command, ICategoryHandler handler)
 	{
@@ -22,9 +20,10 @@ public class CreateCategoryEndpoint : IEndpoint
         }
         
         var response = await handler.CreateAsync(command);
+		var locationUrl = $"/{response.Data?.Id}";
 
 		return response.IsSuccess
-			? Results.Created($"/{response.Data?.Id}", response)
-			: Results.BadRequest(response);
+			? Results.Created(locationUrl, response)
+			: Results.InternalServerError(response);
 	}
 }

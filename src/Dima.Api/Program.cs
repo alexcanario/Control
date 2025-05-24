@@ -1,5 +1,5 @@
 using Dima.Api.Data;
-using Dima.Api.Endpoints.Categories;
+using Dima.Api.Endpoints;
 using Dima.Api.Handlers;
 
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddScoped<ICategoryHandler, CategoryHandler>();
+builder.Services.AddScoped<ITransactionHandler, TransactionHandler>();
 
 var app = builder.Build();
 

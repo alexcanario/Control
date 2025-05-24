@@ -20,11 +20,12 @@ public class CategoryHandler(AppDbContext ctx) : ICategoryHandler
 			ctx.Categories.Add(category);
 			await ctx.SaveChangesAsync();
 
-			return new Response<Category>(category, code: StatusCodes.Status201Created);
+			return new Response<Category>(category, code: StatusCodes.Status201Created, "Categoria criada.");
 		}
-		catch (Exception ex)
+		catch
 		{
-			return new Response<Category>(category, code: StatusCodes.Status500InternalServerError, message: ex.Message);
+			//log
+			return new Response<Category>(category, code: StatusCodes.Status500InternalServerError, "Erro ao gravar a categoria.");
 		}
 	}
 

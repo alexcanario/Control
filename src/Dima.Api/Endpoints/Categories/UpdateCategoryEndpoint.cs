@@ -6,11 +6,10 @@ public class UpdateCategoryEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) =>
         app.MapPut("/", HandleAsync)
-            .Produces<Response<Category>>()
+            .Produces<Response<Category?>>()
             .WithName("UpdateCategory")
             .WithSummary("Updates an existing category")
             .WithDescription("Update an existing category in the system")
-            .WithTags("Categories")
             .WithOrder(2);
 
     private static async Task<IResult> HandleAsync(UpdateCategoryRequest command, ICategoryHandler handler)

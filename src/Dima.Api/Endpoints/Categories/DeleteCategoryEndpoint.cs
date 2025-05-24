@@ -10,7 +10,6 @@ public class DeleteCategoryEndpoint : IEndpoint
             .WithName("DeleteCategory")
             .WithSummary("Deletes a category")
             .WithDescription("Delete a category from the system")
-            .WithTags("Categories")
             .WithOrder(3);
             
 

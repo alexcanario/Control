@@ -10,7 +10,6 @@ public class GetAllCategoryEndpoint : IEndpoint
             .WithName("GetAllCategories")
             .WithSummary("Get all categories")
             .WithDescription("Retrieves all categories from the system")
-            .WithTags("Categories")
             .WithOrder(5);
 
     private static async Task<IResult> HandleAsync(ICategoryHandler handler)

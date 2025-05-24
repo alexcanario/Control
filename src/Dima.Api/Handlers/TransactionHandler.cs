@@ -92,7 +92,7 @@ public class TransactionHandler(AppDbContext context) : ITransactionHandler
 		}
 	}
 
-	public async Task<PagedResponse<IEnumerable<Transaction>?>> GetAllAsync(GetTransactionsByPeriodRequest request)
+	public async Task<PagedResponse<IEnumerable<Transaction>?>> GetByPeriodAsync(GetTransactionsByPeriodRequest request)
 	{
 		try
 		{

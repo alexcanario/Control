@@ -10,7 +10,6 @@ public class GetByIdCategoryEndpoint : IEndpoint
             .WithName("GetCategoryById")
             .WithSummary("Get a category by its ID")
             .WithDescription("Retrieves a category from the system using its unique identifier")
-            .WithTags("Categories")
             .WithOrder(4);
 
     private static async Task<IResult> HandleAsync(long id, ICategoryHandler handle)
@@ -21,7 +20,7 @@ public class GetByIdCategoryEndpoint : IEndpoint
         var response = await handle.GetByIdAsync(new GetCategoryByIdRequest(id, "alexcanario@"));
         
         return response.IsSuccess 
-            ? Results.Ok(response) 
+            ? Results.Ok(response.Data) 
             : Results.NotFound(response);
     }
 }
