@@ -2,5 +2,15 @@ dotnet user-secrets init
 dotnet user-secrets set "ConnectionStrings:DefaultConnection": "Server=localhost,1433; Database=DimaDb-Dev; User Id=sa;Password=C@151867; TrustServerCertificate=True; MultipleActiveResultSets=true"
 dotnet user-secrets clear
 
+dotnet-ef or dotnet ef
 dotnet-ef migrations add Initial-Creation --output-dir Data/Migrations --project .\Dima.Api\
 dotnet-ef database update --project .\Dima.Api\
+
+dotnet add package Microsoft.AspNetCore.Identity
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+Unable to create a 'DbContext' of type 'AppDbContext'. The exception 'The entity type 'IdentityUserRole<long>' requires a primary key to be defined. 
+If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. 
+For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.' 
+was thrown while attempting to create an instance. 
+For the different patterns supported at design time, see https://go.microsoft.com/fwlink/?linkid=851728
