@@ -2,6 +2,7 @@ using Dima.Api.Data;
 using Dima.Api.Endpoints;
 using Dima.Api.Handlers;
 using Dima.Api.Models;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,26 +16,24 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddIdentity<UserApp, IdentityRole<long>>(options =>
-{
-	options.Password.RequiredLength = 6;
-	options.Password.RequireDigit = false;
-	options.Password.RequireLowercase = false;
-	options.Password.RequireUppercase = false;
-	options.Password.RequireNonAlphanumeric = false;
-})
+builder.Services
+	.AddIdentityCore<UserApp>(options =>
+	{
+		options.Password.RequiredLength = 10;
+		options.Password.RequireDigit = true;
+		options.Password.RequireLowercase = true;
+		options.Password.RequireUppercase = true;
+		options.Password.RequireNonAlphanumeric = true;
+	})
+	.AddRoles<IdentityRole<long>>()
 	.AddEntityFrameworkStores<AppDbContext>()
-	.AddDefaultTokenProviders();
+	.AddDefaultTokenProviders()
+	.AddApiEndpoints();
 
 builder.Services.AddScoped<ICategoryHandler, CategoryHandler>();
 builder.Services.AddScoped<ITransactionHandler, TransactionHandler>();
 
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
-	.AddCookie(IdentityConstants.ApplicationScheme, options =>
-	{
-		options.LoginPath = "/login";
-		options.LogoutPath = "/logout";
-	});
+builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

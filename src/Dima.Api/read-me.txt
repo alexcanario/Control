@@ -9,6 +9,8 @@ dotnet-ef database update --project .\Dima.Api\
 dotnet add package Microsoft.AspNetCore.Identity
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
+dotnet-ef migrations add add-identity --output-dir Data/Migrations --project .\Dima.Api\
+
 Unable to create a 'DbContext' of type 'AppDbContext'. The exception 'The entity type 'IdentityUserRole<long>' requires a primary key to be defined. 
 If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. 
 For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.' 

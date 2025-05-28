@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Dima.Api.Data.Configuration.Identity;
 
-public class IdentityUserRoleCfg : IEntityTypeConfiguration<IdentityUserRole<Guid>>
+public class IdentityUserRoleCfg : IEntityTypeConfiguration<IdentityUserRole<long>>
 {
-	public void Configure(EntityTypeBuilder<IdentityUserRole<Guid>> b)
+	public void Configure(EntityTypeBuilder<IdentityUserRole<long>> b)
 	{
 		b.HasKey(ur => new { ur.RoleId, ur.UserId });
 	}
