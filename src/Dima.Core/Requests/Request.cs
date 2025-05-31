@@ -1,4 +1,6 @@
-﻿namespace Dima.Core.Requests;
+﻿using System.Text.Json.Serialization;
+
+namespace Dima.Core.Requests;
 
 public abstract class Request
 {
@@ -6,6 +8,6 @@ public abstract class Request
 
 	protected Request(string userId) => UserId = userId;
 
-	//to-do: Add validation for userId
+	[JsonIgnore]
 	public string UserId { get; set; } = string.Empty;
 }

@@ -50,6 +50,7 @@ if (builder.Environment.IsDevelopment())
 }
 
 app.MapGet("/welcome", () => new { message = "Welcome to Dima API!" });
+
 app.MapEndpoints();
 
 app.MapGroup("v1/identity")
@@ -58,7 +59,7 @@ app.MapGroup("v1/identity")
 
 app.MapGroup("v1/identity")
 	.WithTags("Identity")
-	.MapGet("roles", async (UserManager<AppUser> userManager, HttpContext httpContext) =>
+	.MapGet("/roles", async (UserManager<AppUser> userManager, HttpContext httpContext) =>
 	{
 		var user = await userManager.GetUserAsync(httpContext.User);
 		if (user == null)
@@ -71,7 +72,7 @@ app.MapGroup("v1/identity")
 
 app.MapGroup("v1/identity")
 	.WithTags("Identity")
-	.MapPost("/logout", async (SignInManager<AppUser> signInManager, UserManager<AppUser> appUser) =>
+	.MapPost("/logout", async (SignInManager<AppUser> signInManager) =>
 	{
 		await signInManager.SignOutAsync();
 		return Results.NoContent();

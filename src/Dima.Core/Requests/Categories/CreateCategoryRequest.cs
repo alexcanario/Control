@@ -8,4 +8,4 @@ public class CreateCategoryRequest() : Request()
 
 	[Required(ErrorMessage = "Descrição inválida!")]
 	public string Description { get; set; } = string.Empty;
-}				
+}

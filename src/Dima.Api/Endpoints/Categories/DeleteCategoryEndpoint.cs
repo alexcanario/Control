@@ -13,14 +13,15 @@ public class DeleteCategoryEndpoint : IEndpoint
             .WithOrder(3);
             
 
-    private static async Task<IResult> HandleAsync(long id, ICategoryHandler handle)
+    private static async Task<IResult> HandleAsync(long id, ICategoryHandler handle, HttpContext httpContext)
     {
         if (id <= 0)
         {
             return Results.BadRequest(new Response<Category>(null, StatusCodes.Status400BadRequest, "The provided id must be greater than zero."));
         }
 
-        var response = await handle.DeleteAsync(new DeleteCategoryRequest(id, "alexcanario@"));
+        var userId = httpContext.User.Identity!.Name ?? string.Empty;
+		var response = await handle.DeleteAsync(new DeleteCategoryRequest(id, userId));
 
         return response.IsSuccess 
             ? Results.Ok(response) 

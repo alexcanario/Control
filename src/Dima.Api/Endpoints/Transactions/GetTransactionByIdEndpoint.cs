@@ -15,9 +15,9 @@ public class GetTransactionByIdEndpoint : IEndpoint
 			.WithOrder(4);
 	}
 
-	private static async Task<IResult> HandleAsync(ITransactionHandler handler, long id)
+	private static async Task<IResult> HandleAsync(ITransactionHandler handler, long id, HttpContext httpContext)
 	{
-		const string userId = "alexcanario@";
+		var userId = httpContext.User.Identity!.Name ?? string.Empty;
 		var result = await handler.GetByIdAsync(new GetTransactionByIdRequest(id, userId));
 		
 		return result.IsSuccess

@@ -15,8 +15,10 @@ public class CreateTransactionEndpoint : IEndpoint
 			.WithOrder(1);
 	}
 
-	private static async Task<IResult> HandleAsync(ITransactionHandler handler, CreateTransactionRequest request)
+	private static async Task<IResult> HandleAsync(ITransactionHandler handler, CreateTransactionRequest request, HttpContext httpContext)
 	{
+		var userId = httpContext.User.Identity!.Name ?? string.Empty;
+		request.UserId = userId;
 		var result = await handler.CreateAsync(request);
 		return result.IsSuccess
 			? Results.Created($"/{result.Data?.Id}", result)
