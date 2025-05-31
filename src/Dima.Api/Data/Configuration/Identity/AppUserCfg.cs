@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Dima.Api.Data.Configuration.Identity;
 
-public class AppUserCfg: IEntityTypeConfiguration<UserApp>
+public class AppUserCfg: IEntityTypeConfiguration<AppUser>
 {
-	public void Configure(EntityTypeBuilder<UserApp> b)
+	public void Configure(EntityTypeBuilder<AppUser> b)
 	{
 		b.HasKey(u => u.Id);
 

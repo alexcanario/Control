@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Dima.Api.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : 
-	IdentityDbContext<UserApp, 
+	IdentityDbContext<AppUser, 
 		IdentityRole<long>, 
 		long,
 		IdentityUserClaim<long>,

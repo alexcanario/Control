@@ -17,7 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services
-	.AddIdentityCore<UserApp>(options =>
+	.AddIdentityCore<AppUser>(options =>
 	{
 		options.Password.RequiredLength = 10;
 		options.Password.RequireDigit = true;
@@ -33,17 +33,27 @@ builder.Services
 builder.Services.AddScoped<ICategoryHandler, CategoryHandler>();
 builder.Services.AddScoped<ITransactionHandler, TransactionHandler>();
 
-builder.Services.AddAuthentication();
+builder.Services.AddAuthentication()
+	.AddIdentityCookies();
+	
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.MapEndpoints();
+app.UseAuthentication();
+app.UseAuthorization();
 
-if(builder.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment())
 {
 	app.MapOpenApi();
 	app.UseSwaggerUI(c => c.SwaggerEndpoint("/openapi/v1.json", "Dima Api"));
 }
+
+app.MapGet("/welcome", () => new { message = "Welcome to Dima API!" });
+app.MapEndpoints();
+
+app.MapGroup("v1/identity")
+	.WithTags("Identity")
+	.MapIdentityApi<AppUser>();
 
 app.Run();
