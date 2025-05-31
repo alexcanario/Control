@@ -12,9 +12,10 @@ public class GetCategoriesEndpoint : IEndpoint
             .WithDescription("Retrieves all categories from the system")
             .WithOrder(5);
 
-    private static async Task<IResult> HandleAsync(ICategoryHandler handler)
+    private static async Task<IResult> HandleAsync(ICategoryHandler handler, HttpContext httpContext)
     {
-        var response = await handler.GetAllAsync(new GetAllCategoryRequest("alexcanario@"));
+	    var userId = httpContext.User.Identity!.Name ?? string.Empty;
+		var response = await handler.GetAllAsync(new GetAllCategoryRequest(userId));
         
         return response.IsSuccess 
             ? Results.Ok(response) 

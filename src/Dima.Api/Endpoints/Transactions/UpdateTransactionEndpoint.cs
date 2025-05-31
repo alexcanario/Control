@@ -15,8 +15,11 @@ public class UpdateTransactionEndpoint : IEndpoint
 			.WithOrder(2);
 	}
 
-	private static async Task<IResult> HandleAsync(ITransactionHandler handler, UpdateTransactionRequest command)
+	private static async Task<IResult> HandleAsync(ITransactionHandler handler, UpdateTransactionRequest command, HttpContext httpContext)
 	{
+		var userId = httpContext.User.Identity!.Name ?? string.Empty;
+		command.UserId = userId; 
+
 		var result = await handler.UpdateAsync(command);
 		
 		return result.IsSuccess

@@ -15,9 +15,9 @@ public class DeleteTransactionEndpoint : IEndpoint
 			.WithOrder(3);
 	}
 
-	private static async Task<IResult> HandleAsync(ITransactionHandler handler, long id)
+	private static async Task<IResult> HandleAsync(ITransactionHandler handler, long id, HttpContext httpContext)
 	{
-		const string userId = "alexcanario@";
+		var userId = httpContext.User.Identity!.Name ?? string.Empty;
 		var result = await handler.DeleteAsync(new DeleteTransactionRequest(id, userId));
 		
 		return result.IsSuccess
