@@ -2,7 +2,7 @@
 
 namespace Dima.Api.Endpoints.Categories;
 
-public class GetByIdCategoryEndpoint : IEndpoint
+public class GetCategoryByIdEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) =>
         app.MapGet("/{id:long}", HandleAsync)
