@@ -33,9 +33,9 @@ builder.Services
 builder.Services.AddScoped<ICategoryHandler, CategoryHandler>();
 builder.Services.AddScoped<ITransactionHandler, TransactionHandler>();
 
-builder.Services.AddAuthentication()
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
 	.AddIdentityCookies();
-	
+		
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -55,5 +55,27 @@ app.MapEndpoints();
 app.MapGroup("v1/identity")
 	.WithTags("Identity")
 	.MapIdentityApi<AppUser>();
+
+app.MapGroup("v1/identity")
+	.WithTags("Identity")
+	.MapGet("roles", async (UserManager<AppUser> userManager, HttpContext httpContext) =>
+	{
+		var user = await userManager.GetUserAsync(httpContext.User);
+		if (user == null)
+			return Results.Unauthorized();
+
+		var roles = await userManager.GetRolesAsync(user);
+		return Results.Ok(roles);
+	})
+	.RequireAuthorization();
+
+app.MapGroup("v1/identity")
+	.WithTags("Identity")
+	.MapPost("/logout", async (SignInManager<AppUser> signInManager, UserManager<AppUser> appUser) =>
+	{
+		await signInManager.SignOutAsync();
+		return Results.NoContent();
+	})
+	.RequireAuthorization();
 
 app.Run();
